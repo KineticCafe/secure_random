@@ -1,0 +1,26 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions-minor:
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: mix
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      elixir-development:
+        dependency-type: development
+        update-types:
+          - minor
+          - patch
+      elixir-production:
+        dependency-type: production
+        update-types:
+          - patch
