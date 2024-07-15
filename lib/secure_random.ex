@@ -103,6 +103,25 @@ defmodule SecureRandom do
     :crypto.strong_rand_bytes(n)
   end
 
+  @doc """
+  Returns random Base58 encoded string.
+
+  ## Examples
+
+      iex> SecureRandom.base58
+      "Y5oZt858wSQbnGrxAZTyrY"
+
+      iex> SecureRandom.base58(8)
+      "4xxSsC4PKq5"
+
+  """
+  def base58(n \\ @default_length) do
+    n
+    |> random_bytes()
+    |> :binary.bin_to_list()
+    |> charlist_to_base58()
+  end
+
   defp bigenerate do
     <<u0::48, _::4, u1::12, _::2, u2::62>> = random_bytes(16)
     <<u0::48, 4::4, u1::12, 2::2, u2::62>>
@@ -128,4 +147,17 @@ defmodule SecureRandom do
   defp lower(<<h, t::binary>>, acc) when h in ?A..?F, do: lower(t, acc <> <<h + 32>>)
   defp lower(<<h, t::binary>>, acc), do: lower(t, acc <> <<h>>)
   defp lower(<<>>, acc), do: acc
+
+  defp int_to_base58(x) when x >= 58,
+    do: SecureRandom.Base58.b58char(:rand.uniform(57))
+
+  defp int_to_base58(x),
+    do: SecureRandom.Base58.b58char(x)
+
+  defp charlist_to_base58(chars) do
+    chars
+    |> Enum.map(&rem(&1, 64))
+    |> Enum.map(&int_to_base58(&1))
+    |> List.to_string()
+  end
 end

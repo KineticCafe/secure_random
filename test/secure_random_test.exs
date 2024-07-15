@@ -43,4 +43,16 @@ defmodule SecureRandomTest do
     # that standard is 128 bit string 4byte-2byte-2byte-2byte-6byte
     assert Regex.match?(~r/\A\w{8}-\w{4}-4\w{3}-(8|9|a|b)\w{3}-\w{12}\z/, SecureRandom.uuid())
   end
+
+  test "base58/1 returns a Binary string" do
+    assert is_binary(SecureRandom.base58())
+  end
+
+  test "base58/1 defaults to a byte size of 16" do
+    assert 16 == byte_size(SecureRandom.base58())
+  end
+
+  test "base58/1 successfully takes a byte_length" do
+    assert 24 == byte_size(SecureRandom.base58(24))
+  end
 end
