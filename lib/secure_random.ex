@@ -1,6 +1,4 @@
 defmodule SecureRandom do
-  use Bitwise
-
   @moduledoc """
   Takes my favorite hits from Ruby's SecureRandom and brings em to elixir.
   Mostly a convienance wrapper around Erlangs Crypto library, converting
@@ -34,8 +32,9 @@ defmodule SecureRandom do
 
   """
   def base64(n \\ @default_length) do
-    random_bytes(n)
-    |> Base.encode64(case: :lower)
+    n
+    |> random_bytes()
+    |> Base.encode64()
   end
 
   @doc """
@@ -53,7 +52,8 @@ defmodule SecureRandom do
       "34fb5655a231"
   """
   def hex(n \\ @default_length) do
-    random_bytes(n)
+    n
+    |> random_bytes()
     |> Base.encode16(case: :lower)
   end
 
@@ -70,8 +70,9 @@ defmodule SecureRandom do
 
   """
   def urlsafe_base64(n \\ @default_length) do
-    base64(n)
-    |> Base.url_encode64(case: :lower, padding: true)
+    n
+    |> base64()
+    |> Base.url_encode64(padding: true)
   end
 
   @doc """
@@ -83,7 +84,7 @@ defmodule SecureRandom do
     "e1d87f6e-fbd5-6801-9528-a1d568c1fd02"
   """
   def uuid do
-    bigenerate() |> encode
+    encode(bigenerate())
   end
 
   @doc """
@@ -108,11 +109,15 @@ defmodule SecureRandom do
   end
 
   defp encode(<<u0::32, u1::16, u2::16, u3::16, u4::48>>) do
-    hex_pad(u0, 8) <> "-" <>
-    hex_pad(u1, 4) <> "-" <>
-    hex_pad(u2, 4) <> "-" <>
-    hex_pad(u3, 4) <> "-" <>
-    hex_pad(u4, 12)
+    hex_pad(u0, 8) <>
+      "-" <>
+      hex_pad(u1, 4) <>
+      "-" <>
+      hex_pad(u2, 4) <>
+      "-" <>
+      hex_pad(u3, 4) <>
+      "-" <>
+      hex_pad(u4, 12)
   end
 
   defp hex_pad(hex, count) do
@@ -120,10 +125,7 @@ defmodule SecureRandom do
     lower(hex, :binary.copy("0", count - byte_size(hex)))
   end
 
-  defp lower(<<h, t::binary>>, acc) when h in ?A..?F,
-    do: lower(t, acc <> <<h + 32>>)
-  defp lower(<<h, t::binary>>, acc),
-    do: lower(t, acc <> <<h>>)
-  defp lower(<<>>, acc),
-    do: acc
+  defp lower(<<h, t::binary>>, acc) when h in ?A..?F, do: lower(t, acc <> <<h + 32>>)
+  defp lower(<<h, t::binary>>, acc), do: lower(t, acc <> <<h>>)
+  defp lower(<<>>, acc), do: acc
 end
