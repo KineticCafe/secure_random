@@ -2,12 +2,12 @@ defmodule SecureRandomTest do
   use ExUnit.Case
 
   test "base64/1 returns a Binary string" do
-    assert is_binary(SecureRandom.base64)
+    assert is_binary(SecureRandom.base64())
   end
 
   test "base64/1 defaults to a byte size of 16" do
-    #the result of base64 encoding should be 33% larger
-    assert 24 == byte_size(SecureRandom.base64)
+    # the result of base64 encoding should be 33% larger
+    assert 24 == byte_size(SecureRandom.base64())
   end
 
   test "base64/1 successfully takes a byte_length" do
@@ -16,7 +16,7 @@ defmodule SecureRandomTest do
 
   test "hex/1 defaults to a byte size of 16" do
     # The byte size of the resulting string is twice as large
-    assert 32 == byte_size(SecureRandom.hex)
+    assert 32 == byte_size(SecureRandom.hex())
   end
 
   test "hex/1 successfully takes a byte length" do
@@ -24,11 +24,11 @@ defmodule SecureRandomTest do
   end
 
   test "urlsafe_base64/1 returns a Binary string" do
-    assert is_binary(SecureRandom.urlsafe_base64)
+    assert is_binary(SecureRandom.urlsafe_base64())
   end
 
   test "urlsafe_base64/1 defaults to a string length of 22" do
-    assert 32 == String.length(SecureRandom.urlsafe_base64)
+    assert 32 == String.length(SecureRandom.urlsafe_base64())
   end
 
   test "urlsafe_base64/1 takes a byte_length" do
@@ -36,11 +36,11 @@ defmodule SecureRandomTest do
   end
 
   test "uuid/0 returns a Binary string" do
-    assert is_binary(SecureRandom.uuid)
+    assert is_binary(SecureRandom.uuid())
   end
 
   test "uuid/0 represents the UUIDv4 standard" do
     # that standard is 128 bit string 4byte-2byte-2byte-2byte-6byte
-    assert Regex.match?(~r/\A\w{8}-\w{4}-4\w{3}-(8|9|a|b)\w{3}-\w{12}\z/, SecureRandom.uuid)
+    assert Regex.match?(~r/\A\w{8}-\w{4}-4\w{3}-(8|9|a|b)\w{3}-\w{12}\z/, SecureRandom.uuid())
   end
 end
