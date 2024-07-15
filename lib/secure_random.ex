@@ -71,8 +71,8 @@ defmodule SecureRandom do
   """
   def urlsafe_base64(n \\ @default_length) do
     n
-    |> base64()
-    |> Base.url_encode64(padding: true)
+    |> random_bytes()
+    |> Base.url_encode64(padding: false)
   end
 
   @doc """
